@@ -9,7 +9,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Matrix2305\\RequestObjectMapper": "./src"
+            "Matrix2305\\RequestObjectMapper\\": "./src"
         }
     }
 }
