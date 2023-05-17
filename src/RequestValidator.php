@@ -20,7 +20,7 @@ trait RequestValidator
             foreach ($attributes as $attribute) {
                 if ($attribute->getName() === PropertyValidationRules::class) {
                     $propertyRules = $attribute->getArguments()['rules'];
-                    $propertyMessages = $attribute->getArguments()['messages'];
+                    $propertyMessages = $attribute->getArguments()['messages'] ?? [];
 
                     $rules[$reflectionProperty->getName()] = $propertyRules;
                     $parsedMessages = $this->parseValidationMessages($reflectionProperty->getName(), $propertyMessages);
