@@ -37,34 +37,38 @@ abstract class BaseRequestObjectMapper
         $value = $requestBody[$propertyName];
 
         $nullable = !!$property->getType()?->allowsNull();
+
         if (!$nullable && (is_null($value) || $value === "")) {
             throw new RuntimeException('Property not allows null value.');
         }
 
         if ($type === 'string') {
             $this->mapStringProperty($propertyName, $value);
-        }
-
-        if ($type === 'bool' || $type === 'boolean') {
+        } elseif ($type === 'bool' || $type === 'boolean') {
             $this->mapBooleanProperty($propertyName, $value);
-        }
-
-        if ($type === 'int' || $type === 'integer') {
+        } elseif ($type === 'int' || $type === 'integer') {
             $this->mapIntegerProperty($propertyName, $value);
-        }
-
-        if ($type === 'float') {
+        } elseif ($type === 'float') {
             $this->mapFloatProperty($propertyName, $value);
-        }
-
-        if ($type === 'array') {
+        } elseif ($type === 'array') {
             $this->mapArrayProperty($property, $value);
+        } else {
+            $this->mapObjectProperty($propertyName, $type, $value);
         }
+    }
+
+    private function mapObjectProperty(string $property, string $class, array $value) : void
+    {
+        $object = new $class($value);
+        if (!($object instanceof BaseRequestObjectMapper)) {
+            throw new RuntimeException("$class is not extends BaseRequestMapper");
+        }
+        $this->{$property} = $object;
     }
 
     private function mapStringProperty(string $property, $value) : void
     {
-        $this->{$property} = empty($value) ? null : (string)$value;
+        $this->{$property} = is_null($value) ? null : (string)$value;
     }
 
     private function mapBooleanProperty(string $property, $value) : void
@@ -87,12 +91,12 @@ abstract class BaseRequestObjectMapper
 
     private function mapIntegerProperty(string $property, $value) : void
     {
-        $this->{$property} = (int)$value;
+        $this->{$property} = is_null($value) ? null : (int)$value;
     }
 
     private function mapFloatProperty(string $property, $value) : void
     {
-        $this->{$property} = (float)$value;
+        $this->{$property} = is_null($value) ? $value : (float)$value;
     }
 
     private function mapArrayProperty(ReflectionProperty $property, array $value) : void
