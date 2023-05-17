@@ -10,9 +10,14 @@ use RuntimeException;
 
 abstract class BaseRequestObjectMapper
 {
+    use RequestValidator;
+
     public function __construct(array|null $customData = null)
     {
         $requestBody = $customData ?? request()->all();
+
+        $this->validateRequest($requestBody);
+
         $class = new ReflectionClass(static::class);
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty){
             $this->mapReflectionProperty($reflectionProperty, $requestBody);
