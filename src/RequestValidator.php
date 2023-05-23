@@ -19,8 +19,26 @@ trait RequestValidator
             $attributes = $reflectionProperty->getAttributes();
             foreach ($attributes as $attribute) {
                 if ($attribute->getName() === PropertyValidationRules::class) {
-                    $propertyRules = $attribute->getArguments()['rules'];
-                    $propertyMessages = $attribute->getArguments()['messages'] ?? [];
+                    $arguments = $attribute->getArguments();
+
+                    $propertyRules = [];
+                    if (isset($arguments['rules'])) {
+                        $propertyRules = $arguments['rules'];
+                    }
+
+                    if (isset($arguments[0])) {
+                        $propertyRules = $arguments[0];
+                    }
+
+                    $propertyMessages = [];
+
+                    if (isset($arguments['messages'])) {
+                        $propertyMessages = $arguments['messages'];
+                    }
+
+                    if (isset($arguments[1])) {
+                        $propertyMessages = $arguments[1];
+                    }
 
                     $rules[$reflectionProperty->getName()] = $propertyRules;
                     $parsedMessages = $this->parseValidationMessages($reflectionProperty->getName(), $propertyMessages);
