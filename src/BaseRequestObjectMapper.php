@@ -101,7 +101,7 @@ abstract class BaseRequestObjectMapper
 
     private function mapArrayProperty(ReflectionProperty $property, array $value) : void
     {
-        if (array_is_list($value)) {
+        if ($this->hasStringKeys($value)) {
             $this->mapAssociativeArray($property, $value);
         } else {
             $this->mapNumericArray($property, $value);
@@ -127,6 +127,8 @@ abstract class BaseRequestObjectMapper
             throw new RuntimeException("$objectClass is not valid class!");
         }
 
+        $this->{$propertyName} = [];
+
         foreach ($value as $objectData) {
             $object = new $objectClass($objectData);
             if (!($object instanceof BaseRequestObjectMapper)) {
@@ -151,6 +153,8 @@ abstract class BaseRequestObjectMapper
             throw new RuntimeException("$propertyName must implement ArrayChildTypeMap attribute!");
         }
 
+        $this->{$propertyName} = [];
+
         foreach ($values as $value) {
             if ($arrayItemType === 'string') {
                 $this->{$propertyName}[] = (string)$value;
@@ -165,7 +169,9 @@ abstract class BaseRequestObjectMapper
                 $this->{$propertyName}[] = (bool)$value;
             }
         }
+    }
 
-
+    private function hasStringKeys(array $array) {
+        return count(array_filter(array_keys($array), 'is_string')) > 0;
     }
 }
