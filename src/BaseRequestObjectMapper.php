@@ -101,10 +101,14 @@ abstract class BaseRequestObjectMapper
 
     private function mapArrayProperty(ReflectionProperty $property, array $value) : void
     {
-        if ($this->hasStringKeys($value)) {
-            $this->mapAssociativeArray($property, $value);
-        } else {
-            $this->mapNumericArray($property, $value);
+        $this->{$property->getName()} = [];
+
+        if (count($value) > 0) {
+            if (is_array($value[0]) && $this->hasStringKeys($value[0])) {
+                $this->mapAssociativeArray($property, $value);
+            } else {
+                $this->mapNumericArray($property, $value);
+            }
         }
     }
 
