@@ -43,7 +43,9 @@ abstract class BaseRequestObjectMapper
             throw new RuntimeException('Property not allows null value.');
         }
 
-        if ($type === 'string') {
+        if ($nullable && is_null($value)) {
+            $this->{$propertyName} = null;
+        } else if ($type === 'string') {
             $this->mapStringProperty($propertyName, $value);
         } elseif ($type === 'bool' || $type === 'boolean') {
             $this->mapBooleanProperty($propertyName, $value);
