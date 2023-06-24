@@ -146,6 +146,7 @@ abstract class BaseRequestObjectMapper
     {
         $propertyName = $property->getName();
         $attributes = $property->getAttributes();
+        /** @var ArrayChildTypeMap $arrayItemType */
         $arrayItemType = false;
         foreach ($attributes as $attribute) {
             if ($attribute->getName() === ArrayChildTypeMap::class) {
@@ -160,16 +161,16 @@ abstract class BaseRequestObjectMapper
         $this->{$propertyName} = [];
 
         foreach ($values as $value) {
-            if ($arrayItemType === 'string') {
+            if ($arrayItemType->value === 'string') {
                 $this->{$propertyName}[] = (string)$value;
             }
-            if ($arrayItemType === 'float') {
+            if ($arrayItemType->value === 'float') {
                 $this->{$propertyName}[] = (float)$value;
             }
-            if ($arrayItemType === 'integer') {
+            if ($arrayItemType->value === 'integer') {
                 $this->{$propertyName}[] = (int)$value;
             }
-            if ($arrayItemType === 'boolean') {
+            if ($arrayItemType->value === 'boolean') {
                 $this->{$propertyName}[] = (bool)$value;
             }
         }
