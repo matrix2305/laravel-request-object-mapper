@@ -153,7 +153,13 @@ abstract class BaseRequestObjectMapper
         $arrayItemType = false;
         foreach ($attributes as $attribute) {
             if ($attribute->getName() === ArrayChildTypeMap::class) {
-                $arrayItemType = $attribute->getArguments()['type'];
+                if (isset($attribute->getArguments()['type'])) {
+                    $arrayItemType = $attribute->getArguments()['type'];
+                }
+
+                if (isset($attribute->getArguments()[0])) {
+                    $arrayItemType = $attribute->getArguments()[0];
+                }
             }
         }
 
