@@ -4,6 +4,7 @@ namespace Matrix2305\RequestObjectMapper;
 
 use Matrix2305\RequestObjectMapper\Attributes\ArrayChildObjectMap;
 use Matrix2305\RequestObjectMapper\Attributes\ArrayChildTypeMap;
+use Matrix2305\RequestObjectMapper\Enums\ArrayChildType;
 use ReflectionProperty;
 use ReflectionClass;
 use RuntimeException;
@@ -146,7 +147,7 @@ abstract class BaseRequestObjectMapper
     {
         $propertyName = $property->getName();
         $attributes = $property->getAttributes();
-        /** @var ArrayChildTypeMap $arrayItemType */
+        /** @var ArrayChildType $arrayItemType */
         $arrayItemType = false;
         foreach ($attributes as $attribute) {
             if ($attribute->getName() === ArrayChildTypeMap::class) {
