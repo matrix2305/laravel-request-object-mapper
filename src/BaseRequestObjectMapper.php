@@ -31,21 +31,21 @@ abstract class BaseRequestObjectMapper
         $type = $property->getType()?->getName();
         $propertyName = $property->getName();
 
-        if (!array_key_exists($propertyName, $requestBody)) {
-            throw new RuntimeException("$propertyName does not exists in request body!");
-        }
-
-        $value = $requestBody[$propertyName];
-
         $nullable = !!$property->getType()?->allowsNull();
 
-        if (!$nullable && (is_null($value) || $value === "")) {
-            throw new RuntimeException('Property not allows null value.');
-        }
+        $value = $requestBody[$propertyName] ?? null;
+
 
         if ($nullable && is_null($value)) {
             $this->{$propertyName} = null;
-        } else if ($type === 'string') {
+            return;
+        }
+
+        if (!$nullable && (is_null($value) || $value === "")) {
+            throw new RuntimeException('Property not allows append null value.');
+        }
+
+        if ($type === 'string') {
             $this->mapStringProperty($propertyName, $value);
         } elseif ($type === 'bool' || $type === 'boolean') {
             $this->mapBooleanProperty($propertyName, $value);
