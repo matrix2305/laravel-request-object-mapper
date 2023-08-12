@@ -147,11 +147,12 @@ abstract class BaseRequestObjectMapper
 
     private function mapAssociativeArrayWithReturn(array $value, string $objectClass) : object
     {
-        if (!($objectClass instanceof BaseRequestObjectMapper)) {
+        $object = $objectClass($value);
+        if (!($object instanceof BaseRequestObjectMapper)) {
             throw new RuntimeException("$objectClass is not extends BaseRequestMapper");
         }
 
-        return new $objectClass($value);
+        return new $object;
     }
 
     private function mapNumericArray(ReflectionProperty $property, array $values) : void
