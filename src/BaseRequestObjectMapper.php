@@ -145,6 +145,15 @@ abstract class BaseRequestObjectMapper
         }
     }
 
+    private function mapAssociativeArrayWithReturn(array $value, string $objectClass) : object
+    {
+        if (!($objectClass instanceof BaseRequestObjectMapper)) {
+            throw new RuntimeException("$objectClass is not extends BaseRequestMapper");
+        }
+
+        return new $objectClass($value);
+    }
+
     private function mapNumericArray(ReflectionProperty $property, array $values) : void
     {
         $propertyName = $property->getName();
@@ -170,17 +179,23 @@ abstract class BaseRequestObjectMapper
         $this->{$propertyName} = [];
 
         foreach ($values as $value) {
-            if ($arrayItemType->value === 'string') {
-                $this->{$propertyName}[] = (string)$value;
+            if ($arrayItemType instanceof ArrayChildType) {
+                if ($arrayItemType->value === 'string') {
+                    $this->{$propertyName}[] = (string)$value;
+                }
+                if ($arrayItemType->value === 'float') {
+                    $this->{$propertyName}[] = (float)$value;
+                }
+                if ($arrayItemType->value === 'integer') {
+                    $this->{$propertyName}[] = (int)$value;
+                }
+                if ($arrayItemType->value === 'boolean') {
+                    $this->{$propertyName}[] = (bool)$value;
+                }
             }
-            if ($arrayItemType->value === 'float') {
-                $this->{$propertyName}[] = (float)$value;
-            }
-            if ($arrayItemType->value === 'integer') {
-                $this->{$propertyName}[] = (int)$value;
-            }
-            if ($arrayItemType->value === 'boolean') {
-                $this->{$propertyName}[] = (bool)$value;
+
+            if (class_exists($arrayItemType) && is_array($value)) {
+                $this->{$propertyName}[] = $this->mapAssociativeArrayWithReturn($value, $arrayItemType);
             }
         }
     }

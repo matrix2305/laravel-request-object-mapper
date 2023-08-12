@@ -9,6 +9,6 @@ use Matrix2305\RequestObjectMapper\Enums\ArrayChildType;
 class ArrayChildTypeMap
 {
     public function __construct(
-        public ArrayChildType $type
+        public ArrayChildType|string $type
     ) {}
 }
