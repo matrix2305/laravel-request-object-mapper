@@ -187,6 +187,6 @@ abstract class BaseRequestObjectMapper
 
     private function hasStringKeys(array $array): bool
     {
-        return isset($array[0]) && count(array_filter(array_keys($array[0]), 'is_string')) > 0;
+        return isset($array[0]) && is_array($array[0]) && count(array_filter(array_keys($array[0]), 'is_string')) > 0;
     }
 }
