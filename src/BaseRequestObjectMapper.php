@@ -42,7 +42,7 @@ abstract class BaseRequestObjectMapper
         }
 
         if (!$nullable && (is_null($value) || $value === "")) {
-            throw new RuntimeException('Property not allows append null value.');
+            throw new RuntimeException("Property $propertyName not allows append null value.");
         }
 
         if ($type === 'string') {
