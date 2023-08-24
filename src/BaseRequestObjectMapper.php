@@ -193,6 +193,8 @@ abstract class BaseRequestObjectMapper
                 if ($arrayItemType->value === 'boolean') {
                     $this->{$propertyName}[] = (bool)$value;
                 }
+
+                continue;
             }
 
             if (class_exists($arrayItemType) && is_array($value)) {
