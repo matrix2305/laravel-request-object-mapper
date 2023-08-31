@@ -17,6 +17,7 @@ abstract class BaseRequestObjectMapper
     public function __construct(array|null $customData = null, ?string $propertyPrefix = null)
     {
         $requestBody = $customData ?? request()->all();
+        $this->propertyPrefix = $propertyPrefix;
 
         $this->validateRequest($requestBody, $propertyPrefix);
 
