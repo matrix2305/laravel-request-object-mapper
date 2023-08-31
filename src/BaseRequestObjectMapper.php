@@ -138,7 +138,7 @@ abstract class BaseRequestObjectMapper
         $this->{$propertyName} = [];
 
         foreach ($value as $objectData) {
-            $object = new $objectClass($objectData);
+            $object = new $objectClass($objectData, $this->propertyPrefix ? $this->propertyPrefix.'.'.$propertyName.'.*' : $propertyName.'.*');
             if (!($object instanceof BaseRequestObjectMapper)) {
                 throw new RuntimeException("$objectClass is not extends BaseRequestMapper");
             }
