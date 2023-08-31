@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 trait RequestValidator
 {
-    private function validateRequest(array $data) : void
+    private function validateRequest(array $data, ?string $propertyPrefix = null) : void
     {
         $rules = [];
         $messages = [];
@@ -40,7 +40,7 @@ trait RequestValidator
                         $propertyMessages = $arguments[1];
                     }
 
-                    $rules[$reflectionProperty->getName()] = $propertyRules;
+                    $rules[$propertyPrefix ? $propertyPrefix.'.'.$reflectionProperty->getName() : $reflectionProperty->getName()] = $propertyRules;
                     $parsedMessages = $this->parseValidationMessages($reflectionProperty->getName(), $propertyMessages);
                     $messages = array_merge_recursive($messages, $parsedMessages);
                 }

@@ -12,12 +12,13 @@ use RuntimeException;
 abstract class BaseRequestObjectMapper
 {
     use RequestValidator;
+    private ?string $propertyPrefix = null;
 
-    public function __construct(array|null $customData = null)
+    public function __construct(array|null $customData = null, ?string $propertyPrefix = null)
     {
         $requestBody = $customData ?? request()->all();
 
-        $this->validateRequest($requestBody);
+        $this->validateRequest($requestBody, $propertyPrefix);
 
         $class = new ReflectionClass(static::class);
         foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $reflectionProperty){
@@ -62,7 +63,7 @@ abstract class BaseRequestObjectMapper
 
     private function mapObjectProperty(string $property, string $class, array $value) : void
     {
-        $object = new $class($value);
+        $object = new $class($value, $this->propertyPrefix ? $this->propertyPrefix.'.'.$property : $property);
         if (!($object instanceof BaseRequestObjectMapper)) {
             throw new RuntimeException("$class is not extends BaseRequestMapper");
         }
