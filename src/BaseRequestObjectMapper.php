@@ -56,7 +56,10 @@ abstract class BaseRequestObjectMapper
         } elseif ($type === 'float') {
             $this->mapFloatProperty($propertyName, $value);
         } elseif ($type === 'array') {
-            $this->mapArrayProperty($property, $value);
+            $this->mapArrayProperty(
+                $property,
+                is_string($value) ? explode(',', str_replace(' ', '', $value)) : $value
+            );
         } else {
             $this->mapObjectProperty($propertyName, $type, $value);
         }
