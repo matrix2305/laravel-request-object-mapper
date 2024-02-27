@@ -29,14 +29,25 @@ abstract class BaseRequestObjectMapper
 
     private function mapReflectionProperty(ReflectionProperty $property, array $requestBody) : void
     {
-
-        $type = $property->getType()?->getName();
         $propertyName = $property->getName();
-
-        $nullable = !!$property->getType()?->allowsNull();
-
         $value = $requestBody[$propertyName] ?? null;
 
+        if (!$property->hasType()) {
+            throw new RuntimeException("$propertyName must implements type!");
+        }
+
+        $nullable = (bool)$property->getType()?->allowsNull();
+
+        if ($property->getType() instanceof \ReflectionUnionType) {
+            $type = gettype($value);
+            if ($type === 'double') {
+                $type = 'float';
+            } elseif ($type === 'object') {
+                $type = 'array';
+            }
+        } else {
+            $type = $property->getType()?->getName();
+        }
 
         if ($nullable && is_null($value)) {
             $this->{$propertyName} = null;
@@ -68,7 +79,7 @@ abstract class BaseRequestObjectMapper
     private function mapObjectProperty(string $property, string $class, array $value) : void
     {
         $object = new $class($value, $this->propertyPrefix ? $this->propertyPrefix.'.'.$property : $property);
-        if (!($object instanceof BaseRequestObjectMapper)) {
+        if (!($object instanceof self)) {
             throw new RuntimeException("$class is not extends BaseRequestMapper");
         }
         $this->{$property} = $object;
