@@ -78,7 +78,7 @@ abstract class BaseRequestObjectMapper
 
     private function mapObjectProperty(string $property, string $class, array $value) : void
     {
-        $object = new $class($value, $this->propertyPrefix ? $this->propertyPrefix.'.'.$property : $property);
+        $object = new $class($value);
         if (!($object instanceof self)) {
             throw new RuntimeException("$class is not extends BaseRequestMapper");
         }
@@ -153,7 +153,7 @@ abstract class BaseRequestObjectMapper
         $this->{$propertyName} = [];
 
         foreach ($value as $objectData) {
-            $object = new $objectClass($objectData, $this->propertyPrefix ? $this->propertyPrefix.'.'.$propertyName.'.*' : $propertyName.'.*');
+            $object = new $objectClass($objectData, '*');
             if (!($object instanceof BaseRequestObjectMapper)) {
                 throw new RuntimeException("$objectClass is not extends BaseRequestMapper");
             }
