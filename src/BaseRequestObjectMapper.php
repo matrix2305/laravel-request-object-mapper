@@ -78,6 +78,15 @@ abstract class BaseRequestObjectMapper
 
     private function mapObjectProperty(string $property, string $class, array $value) : void
     {
+        if ($class === 'array') {
+            if (!is_array($value)) {
+                throw new RuntimeException("Property $property must be an array!");
+            }
+
+            $this->{$property} = $value;
+            return;
+        }
+
         $object = new $class($value);
         if (!($object instanceof self)) {
             throw new RuntimeException("$class is not extends BaseRequestMapper");
