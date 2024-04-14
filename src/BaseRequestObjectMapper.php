@@ -151,7 +151,7 @@ abstract class BaseRequestObjectMapper
                 throw new RuntimeException("Property $property must be an array!");
             }
 
-            $this->{$property} = $value;
+            $this->{$propertyName} = $value;
             return;
         }
 
