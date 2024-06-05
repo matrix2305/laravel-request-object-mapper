@@ -92,17 +92,14 @@ abstract class BaseRequestObjectMapper
 
     private function mapBooleanProperty(string $property, $value) : void
     {
-        $result = false;
         if ($value === 'true') {
             $result = true;
-        }
-
-        if ($value === 'false') {
+        } elseif ($value === 'false') {
             $result = false;
-        }
-
-        if (is_bool($value)) {
+        } elseif (is_bool($value)) {
             $result = $value;
+        } else {
+            $result = (bool)$value;
         }
 
         $this->{$property} = $result;
